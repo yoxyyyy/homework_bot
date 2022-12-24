@@ -40,7 +40,7 @@ logger.addHandler(log_handler)
 
 
 def check_tokens():
-    """Проверяем доступность токентов"""
+    """Проверяем доступность токентов."""
     tokens = [PRACTICUM_TOKEN, TELEGRAM_TOKEN, TELEGRAM_CHAT_ID]
     if all(tokens):
         return True
