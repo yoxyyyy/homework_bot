@@ -173,7 +173,7 @@ class TestHomework:
                 '`Authorization`.'
             )
             assert kwargs['headers']['Authorization'].startswith('OAuth '), (
-                'Проверьте, что заголовок `Authorization` начинается с `OAuth`.'
+                'Проверьте, что заголовок `Authorization` начинается с `OAuth`'
             )
             assert 'params' in kwargs, (
                 'Проверьте, что в запросе переданы параметры `params`.'
@@ -341,7 +341,7 @@ class TestHomework:
             else:
                 raise AssertionError(
                     f'Убедитесь, что функция `{func_name}` выбрасывает '
-                    'исключение, когда API домашки возвращает недокументированный '
+                    'исключение, когда API домашки возвращает недокументированный'
                     'статус домашней работы либо домашку без статуса.'
                 )
 
