@@ -46,7 +46,6 @@ def check_tokens():
         return True
     else:
         return False
-    # return tokens
 
 
 def send_message(bot, message):
@@ -64,15 +63,15 @@ def get_api_answer(timestamp):
     params = dict(
         url=ENDPOINT,
         headers=HEADERS,
-        params={"from_date": timestamp}
+        params={'from_date': timestamp}
     )
     try:
         homework_statuses = requests.get(**params)
     except Exception as error:
-        logger.error(f"Ошибка при запросе к API: {error}")
+        logger.error(f'Ошибка при запросе к API: {error}')
     else:
         if homework_statuses.status_code != HTTPStatus.OK:
-            error_message = "Статус страницы не равен 200"
+            error_message = 'Статус страницы не равен 200'
             raise requests.HTTPError(error_message)
         return homework_statuses.json()
 
@@ -82,10 +81,11 @@ def check_response(response):
     try:
         homeworks_list = response['homeworks']
     except KeyError:
-        logger.error('В ответе API отсутствует ожидаемый ключ "homeworks".')
-        raise KeyError('В ответе API отсутствует ожидаемый ключ "homeworks".')
+        osh = f'Ошибка доступа по ключу homework_name: {KeyError}'
+        logger.error(osh)
+        raise KeyError(osh)
     if not isinstance(homeworks_list, list):
-        raise TypeError("homeworks в ответе API не список")
+        raise TypeError('homeworks в ответе API не список')
     try:
         homework = homeworks_list[0]
     except IndexError:
@@ -96,13 +96,13 @@ def check_response(response):
 
 def parse_status(homework):
     """Извлекает статус работы."""
-    homework_name = homework.get("homework_name")
+    homework_name = homework.get('homework_name')
     if not homework_name:
-        raise KeyError("homework_name отсутвует в ответе API")
-    homework_status = homework.get("status")
+        raise KeyError('homework_name отсутвует в ответе API')
+    homework_status = homework.get('status')
     verdict = HOMEWORK_VERDICTS.get(homework_status)
     if not verdict:
-        message_verdict = "Такого статуса нет в словаре"
+        message_verdict = 'Такого статуса нет в словаре'
         raise KeyError(message_verdict)
     return f'Изменился статус проверки работы "{homework_name}". {verdict}'
 
@@ -122,20 +122,20 @@ def main():
             homework = check_response(response)
             if homework:
                 message = parse_status(homework)
-                current_report[response.get("homework_name")] = response.get(
-                    "status")
+                current_report[response.get('homework_name')] = response.get(
+                    'status')
                 if current_report != prev_report:
                     send_message(bot, message)
                     prev_report = current_report.copy()
                     current_report[
-                        response.get("homework_name")] = response.get("status")
-            current_timestamp = response.get("current_date")
+                        response.get('homework_name')] = response.get('status')
+            current_timestamp = response.get('current_date')
 
         except Exception as error:
-            message = f"Сбой в работе программы: {error}"
+            message = f'Сбой в работе программы: {error}'
             logger.error(message)
         else:
-            logger.error("Сбой, ошибка не найдена")
+            logger.error('Сбой, ошибка не найдена')
         finally:
             time.sleep(RETRY_PERIOD)
 
@@ -149,7 +149,7 @@ if __name__ == '__main__':
                 '%(funcName)s'
                 '%(lineno)d'),
         level=logging.INFO,
-        filename="program.log",
-        filemode="w",
+        filename='program.log',
+        filemode='w',
     )
     main()
